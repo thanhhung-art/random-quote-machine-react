@@ -3,7 +3,6 @@ import './App.css';
 import { useState, useEffect } from "react";
 
 function App() {
-
   const [ quote, setQuote] = useState("");
   const [ author, setAuthor ] = useState("");
 
@@ -22,21 +21,21 @@ function App() {
   '#73A857'
 ];
 
-  let quoteText = document.getElementById("quote-text");
-  let quoteAuthor = document.getElementById("quote-author");
-
   useEffect(() => {
-    getNewQuote();
-  },[]);
+   window.addEventListener("load",getNewQuote);
+   
+   return () => window.removeEventListener("load",getNewQuote)
+  });
 
-  const getNewQuote = () => {
-    fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json')
+  async function getNewQuote () {
+    await fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json')
     .then(res => res.json())
     .then(result => {
       let random = Math.round(Math.random() * result.quotes.length - 1);
       setQuote(result.quotes[random].quote);
       setAuthor(result.quotes[random].author);
-    });
+    })
+    .catch((err) => console.log(err.message));
 
     //set style elements
     let randomColor = Math.round(Math.random() * colors.length);
@@ -46,17 +45,18 @@ function App() {
     document.querySelector("button").style.backgroundColor = colors[randomColor];
     document.getElementById("tweet-quote").href = 'https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=' +
       encodeURIComponent('"' + quote + '" ' + author);
-  }
 
-  const opacityEffect = () => {
-    
-    function wait () {
+    //set animation
+    const el = document.getElementById("app");
+    el.classList.remove("show");
 
-    }
+    void el.offsetWidth;
+
+    el.classList.add("show");
   }
 
   return (
-    <div className="App">
+    <div className="App" id="app">
       <div id="quote-box">
         <div id="quote-text">
           <i className="fa fa-quote-left"></i>
@@ -66,10 +66,10 @@ function App() {
           <span>- {author}</span>
         </div>
         <div id="links">
-          <a href="#" id="tweet-quote" className="button" title="tweet this quote" >
+          <a href="#0" id="tweet-quote" className="button" title="tweet this quote" >
              <i className="fab fa-twitter"></i>
           </a>
-          <button className="button" id="new-quote" onClick={getNewQuote} >New quote</button> 
+          <button className="button" id="new-quote" onClick={() => getNewQuote()} >New quote</button> 
         </div>
       </div>
     </div>

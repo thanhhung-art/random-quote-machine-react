@@ -7,7 +7,10 @@
   left: 50%;
   transform: translate(-50%,-50%);
   font-family: "Rareway", san-serif;
+}
 
+.show {
+  animation: show 1.5s linear;
 }
 
 #quote-box {
@@ -44,6 +47,7 @@ i {
   border-radius: 7px;
   border: none;
   outline: none;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 900px){
@@ -59,5 +63,15 @@ i {
 
   .App {
     width: 90%;
+  }
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
